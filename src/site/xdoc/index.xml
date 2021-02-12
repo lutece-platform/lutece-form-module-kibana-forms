@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Module kibana forms</title>
+    </properties>
+    <body>
+        <section name="Module kibana forms">
+            <p>
+                <img src="images/elastic.png" />
+            </p>
+            <subsection name="Introduction">
+                <p>Kibana forms dashboards supplier</p>
+            </subsection>
+        </section>
+    </body>
+</document>
+

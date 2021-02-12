@@ -9,7 +9,7 @@
 
 ## Introduction
 
-Kibana forms dashboards supplier
+Module de production de dashboard du plugin Forms pour Kibana
 
 
 [Maven documentation and reports](https://dev.lutece.paris.fr/plugins/module-kibana-forms/)
