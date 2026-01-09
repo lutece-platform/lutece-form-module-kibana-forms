@@ -46,21 +46,22 @@ import fr.paris.lutece.plugins.kibana.business.GirdLayout;
 import fr.paris.lutece.plugins.kibana.service.IDataVisualizerService;
 import fr.paris.lutece.plugins.kibana.service.SavedObjectService;
 import fr.paris.lutece.plugins.kibana.service.VisualizationService;
-import fr.paris.lutece.portal.business.event.ResourceEvent;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
  * ResourceHistoryService
  *
  */
+@ApplicationScoped
 public class DataVisualizerService implements IDataVisualizerService
 {
     public static final String DATA_SOURCE_ID = "FormsDataSource";
 
     @Override
-    public void createOrUpdate( ResourceEvent event, DataSource dataSource )
+    public void createOrUpdate( DataSource dataSource )
     {
         List<Form> listForms = FormHome.getFormList( );
         String strIdIndexPattern = dataSource.getTargetIndexName( );
@@ -68,7 +69,7 @@ public class DataVisualizerService implements IDataVisualizerService
         {
             JSONArray jsonArrayReference = new JSONArray( );
             JSONArray jsonArraypanelsJSON = new JSONArray( );
-            String strIdDashboard = event.getIdResource( ) + "_" + form.getId( );
+            String strIdDashboard = dataSource.getId( ) + "_" + form.getId( );
             GirdLayout girdLayout = new GirdLayout( );
             String strQueryFilterFormResponse = "documentTypeName.keyword : formResponse and formId : " + form.getId( );
             initDashboard( jsonArrayReference, jsonArraypanelsJSON, strIdDashboard, strIdIndexPattern, girdLayout, form.getId( ) );
@@ -86,26 +87,26 @@ public class DataVisualizerService implements IDataVisualizerService
                     if ( strType.contains( "entryTypeSelect" ) || strType.contains( "entryTypeCheckBox" ) || strType.contains( "entryTypeRadioButton" ) )
                     {
                         DashboardReference dashboardReferenceLens = new DashboardReference( "lens" );
-                        jsonArrayReference.add( dashboardReferenceLens );
-                        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReferenceLens.getName( ), girdLayout.getPos( 12, 10 ) ) );
+                        jsonArrayReference.put( convertToJSONObject( dashboardReferenceLens ) );
+                        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReferenceLens.getName( ), girdLayout.getPos( 12, 10 ) ) );
                         VisualizationService.createDonutLensVisualization( question.getTitle( ), fieldName, dashboardReferenceLens.getId( ), strIdIndexPattern,
                                 strQueryFilterFormResponse );
                         DashboardReference dashboardReferenceTable = new DashboardReference( );
-                        jsonArrayReference.add( dashboardReferenceTable );
-                        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReferenceTable.getName( ), girdLayout.getPos( 12, 10 ) ) );
+                        jsonArrayReference.put( convertToJSONObject( dashboardReferenceTable ) );
+                        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReferenceTable.getName( ), girdLayout.getPos( 12, 10 ) ) );
                         VisualizationService.createDataTableTopValueVisualization( question.getTitle( ), fieldName, dashboardReferenceTable.getId( ),
                                 strIdIndexPattern, strQueryFilterFormResponse );
                     }
                     if ( strType.contains( "entryTypeGeolocation" ) )
                     {
                         DashboardReference dashboardReferenceMap = new DashboardReference( "map" );
-                        jsonArrayReference.add( dashboardReferenceMap );
-                        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReferenceMap.getName( ), girdLayout.getPos( 24, 10 ) ) );
+                        jsonArrayReference.put( convertToJSONObject(  dashboardReferenceMap ) );
+                        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReferenceMap.getName( ), girdLayout.getPos( 24, 10 ) ) );
                         VisualizationService.createMapVisualization( question.getTitle( ), fieldName, dashboardReferenceMap.getId( ), strIdIndexPattern,
                                 strQueryFilterFormResponse );
                         DashboardReference dashboardReferenceTable = new DashboardReference( );
-                        jsonArrayReference.add( dashboardReferenceTable );
-                        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReferenceTable.getName( ), girdLayout.getPos( 24, 10 ) ) );
+                        jsonArrayReference.put( convertToJSONObject(  dashboardReferenceTable ) );
+                        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReferenceTable.getName( ), girdLayout.getPos( 24, 10 ) ) );
                         VisualizationService.createDataTableTopValueVisualization( question.getTitle( ),
                                 fieldName.replace( "elastic.geopoint", "address.keyword" ), dashboardReferenceTable.getId( ), strIdIndexPattern,
                                 strQueryFilterFormResponse );
@@ -113,8 +114,8 @@ public class DataVisualizerService implements IDataVisualizerService
                     if ( strType.contains( "entryTypeText" ) || strType.contains( "entryTypeTextArea" ) )
                     {
                         DashboardReference dashboardReferenceTable = new DashboardReference( );
-                        jsonArrayReference.add( dashboardReferenceTable );
-                        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReferenceTable.getName( ), girdLayout.getPos( 24, 10 ) ) );
+                        jsonArrayReference.put( convertToJSONObject(  dashboardReferenceTable ) );
+                        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReferenceTable.getName( ), girdLayout.getPos( 24, 10 ) ) );
                         VisualizationService.createDataTableTopValueVisualization( question.getTitle( ), fieldName, dashboardReferenceTable.getId( ),
                                 strIdIndexPattern, strQueryFilterFormResponse );
                     }
@@ -138,20 +139,20 @@ public class DataVisualizerService implements IDataVisualizerService
             GirdLayout girdLayout, int formId )
     {
         DashboardReference dashboardReference = new DashboardReference( );
-        jsonArrayReference.add( dashboardReference );
-        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReference.getName( ), girdLayout.getPos( 36, 10 ) ) );
+        jsonArrayReference.put( convertToJSONObject( dashboardReference ) );
+        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReference.getName( ), girdLayout.getPos( 36, 10 ) ) );
         createHistoResponseVisualization( "Histogramme des demandes", dashboardReference.getId( ), strIdIndexPattern, formId );
         dashboardReference = new DashboardReference( );
-        jsonArrayReference.add( dashboardReference );
-        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReference.getName( ), girdLayout.getPos( 12, 10 ) ) );
+        jsonArrayReference.put( convertToJSONObject( dashboardReference ) );
+        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReference.getName( ), girdLayout.getPos( 12, 10 ) ) );
         createResponseByMonthVisualization( "Répartition par mois", dashboardReference.getId( ), strIdIndexPattern, formId );
         dashboardReference = new DashboardReference( );
-        jsonArrayReference.add( dashboardReference );
-        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReference.getName( ), girdLayout.getPos( 24, 10 ) ) );
+        jsonArrayReference.put( convertToJSONObject( dashboardReference ) );
+        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReference.getName( ), girdLayout.getPos( 24, 10 ) ) );
         createWorkflowDurationVisualization( "Répartition par état des demandes", dashboardReference.getId( ), strIdIndexPattern, formId );
         dashboardReference = new DashboardReference( );
-        jsonArrayReference.add( dashboardReference );
-        jsonArraypanelsJSON.add( SavedObjectService.createPanelJson( dashboardReference.getName( ), girdLayout.getPos( 24, 10 ) ) );
+        jsonArrayReference.put( convertToJSONObject( dashboardReference ) );
+        jsonArraypanelsJSON.put( SavedObjectService.createPanelJson( dashboardReference.getName( ), girdLayout.getPos( 24, 10 ) ) );
         createWorkflowHistoryDurationVisualization( "Répartition de l'historique des workflows par état", dashboardReference.getId( ), strIdIndexPattern,
                 formId );
     }
@@ -239,5 +240,20 @@ public class DataVisualizerService implements IDataVisualizerService
                 + "\\\",\\\"type\\\":\\\"table\\\",\\\"aggs\\\":[{\\\"id\\\":\\\"1\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"count\\\",\\\"params\\\":{\\\"customLabel\\\":\\\"Nombre de réponses\\\"},\\\"schema\\\":\\\"metric\\\"},{\\\"id\\\":\\\"2\\\",\\\"enabled\\\":true,\\\"type\\\":\\\"date_histogram\\\",\\\"params\\\":{\\\"field\\\":\\\"timestamp\\\",\\\"timeRange\\\":{\\\"from\\\":\\\"now-90d\\\",\\\"to\\\":\\\"now\\\"},\\\"useNormalizedEsInterval\\\":true,\\\"scaleMetricValues\\\":false,\\\"interval\\\":\\\"M\\\",\\\"drop_partials\\\":false,\\\"min_doc_count\\\":1,\\\"extended_bounds\\\":{},\\\"customLabel\\\":\\\"Mois\\\"},\\\"schema\\\":\\\"bucket\\\"}],\\\"params\\\":{\\\"perPage\\\":10,\\\"showPartialRows\\\":false,\\\"showMetricsAtAllLevels\\\":false,\\\"sort\\\":{\\\"columnIndex\\\":null,\\\"direction\\\":null},\\\"showTotal\\\":false,\\\"totalFunc\\\":\\\"sum\\\",\\\"percentageCol\\\":\\\"\\\",\\\"row\\\":false}}";
         ( (JSONObject) bar.get( "attributes" ) ).put( "visState", visState );
         SavedObjectService.create( bar );
+    }
+    
+    /**
+     * Converts a DashboardReference object into a JSONObject usable by Kibana.
+     *
+     * @param ref the DashboardReference object to convert
+     * @return JSONObject representing the reference
+     */
+    public static JSONObject convertToJSONObject( DashboardReference ref ) 
+    {
+        JSONObject refJson = new JSONObject();
+        refJson.put( "id", ref.getId() );
+        refJson.put( "name", ref.getName() );
+        refJson.put( "type", ref.getType() );
+        return refJson;
     }
 }

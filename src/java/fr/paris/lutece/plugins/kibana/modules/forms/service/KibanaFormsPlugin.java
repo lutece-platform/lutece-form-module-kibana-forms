@@ -47,13 +47,6 @@ public final class KibanaFormsPlugin extends PluginDefaultImplementation impleme
     /** The Constant PLUGIN_NAME. */
     public static final String PLUGIN_NAME = "kibana-forms";
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init( )
-    {
-    }
 
     /**
      * Return the plugin
