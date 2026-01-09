@@ -2,13 +2,13 @@
     <parent>
         <artifactId>lutece-global-pom</artifactId>
         <groupId>fr.paris.lutece.tools</groupId>
-        <version>7.0.2</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>module-kibana-forms</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <name>Lutece kibana forms module</name>
     <repositories>
         <repository>
@@ -33,32 +33,30 @@
         <dependency>
             <groupId>fr.paris.lutece</groupId>
             <artifactId>lutece-core</artifactId>
-            <version>[6.2.0,7.9.9)</version>
+            <version>[8.0.0-SNAPSHOT,)</version>
             <type>lutece-core</type>
         </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>plugin-kibana</artifactId>
-            <version>[2.0.2-SNAPSHOT,2.9.9)</version>
+            <version>[3.0.0-SNAPSHOT,)</version>
             <type>lutece-plugin</type>
         </dependency>
-          <dependency>
+        <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>plugin-forms</artifactId>
-            <version>[2.0.0-SNAPSHOT,3.9.9)</version>
+            <version>[4.0.0-SNAPSHOT,)</version>
             <type>lutece-plugin</type>
         </dependency>
-          <dependency>
+        <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>module-elasticdata-forms</artifactId>
-            <version>[1.0.3-SNAPSHOT,1.9.9)</version>
+            <version>[2.0.0-SNAPSHOT,)</version>
             <type>lutece-plugin</type>
         </dependency>
     </dependencies>
     <properties>
         <componentName>module-kibana-forms</componentName>
-        <jiraProjectName>module-kibana-forms</jiraProjectName>
-        <jiraComponentId>ELKFORMS</jiraComponentId>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/lutece-platform/lutece-form-module-kibana-forms.git</connection>
