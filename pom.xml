@@ -8,7 +8,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>module-kibana-forms</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
     <name>Lutece kibana forms module</name>
     <repositories>
         <repository>
@@ -62,6 +62,6 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-form-module-kibana-forms.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-form-module-kibana-forms.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-form-module-kibana-forms.git</url>
-        <tag>HEAD</tag>
+        <tag>module-kibana-forms-2.0.0</tag>
     </scm>
 </project>
