@@ -8,7 +8,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>module-kibana-forms</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>2.0.1-beta-01</version>
+    <version>2.0.1</version>
     <name>Lutece kibana forms module</name>
     <repositories>
         <repository>
