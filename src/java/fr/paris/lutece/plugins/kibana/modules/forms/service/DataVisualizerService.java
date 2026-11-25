@@ -46,6 +46,7 @@ import fr.paris.lutece.plugins.kibana.business.GirdLayout;
 import fr.paris.lutece.plugins.kibana.service.IDataVisualizerService;
 import fr.paris.lutece.plugins.kibana.service.SavedObjectService;
 import fr.paris.lutece.plugins.kibana.service.VisualizationService;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -82,6 +83,12 @@ public class DataVisualizerService implements IDataVisualizerService
                 {
                     int idQuestion = optionalQuestionIndexation.getIdQuestion( );
                     Question question = QuestionHome.findByPrimaryKey( idQuestion );
+                    if ( question == null || question.getEntry( ) == null || question.getEntry( ).getEntryType( ) == null )
+                    {
+                        // question deleted in the forms editor after it was ticked for the indexation: nothing to show
+                        AppLogService.info( "Kibana dashboard of the form {} : indexed question {} no longer exists, skipped", form.getId( ), idQuestion );
+                        continue;
+                    }
                     String strType = question.getEntry( ).getEntryType( ).getBeanName( );
                     String fieldName = getFieldName( strType, question.getId( ), question.getTitle( ) );
                     if ( strType.contains( "entryTypeSelect" ) || strType.contains( "entryTypeCheckBox" ) || strType.contains( "entryTypeRadioButton" ) )
